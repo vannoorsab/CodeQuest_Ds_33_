@@ -35,10 +35,10 @@ Install the required Python packages using:
 Copy code
 ### pip install -r requirements.txt
 Start the Flask server by running:
-bash
+### bash
 Copy code
 python app.py
-### Access the application on your browser at http://127.0.0.1:5000/.
+
 Usage
 ### Electron Application
 Run the Electron app using npm start.
@@ -55,8 +55,6 @@ After submission, you'll see two options:
 
 ### vWeb Page (Flask Application)
 Run the Flask server using python app.py.
-
-### Access the web page at http://127.0.0.1:5000/.
 
 Fill in the form fields with the student's data:
 
