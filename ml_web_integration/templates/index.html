@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Performing Student Recognition System</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Top Performing Student Recognition System</h1>
+        <div class="form-wrapper">
+            <form id="studentForm">
+                <label for="name">Student Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="batch">Batch Year:</label>
+                <input type="number" id="batch" name="batch" required>
+
+                <label for="academic">Academic Performance (out of 10):</label>
+                <input type="number" id="academic" name="academic" min="0" max="10" required>
+
+                <label for="core_courses">Core Course Excellence (out of 10):</label>
+                <input type="number" id="core_courses" name="core_courses" min="0" max="10" required>
+
+                <label for="hackathons">Hackathon Participation (count):</label>
+                <input type="number" id="hackathons" name="hackathons" min="0" required>
+
+                <label for="papers">Paper Presentations (count):</label>
+                <input type="number" id="papers" name="papers" min="0" required>
+
+                <label for="contributions">Teacher Contributions (out of 10):</label>
+                <input type="number" id="contributions" name="contributions" min="0" max="10" required>
+
+            
+            <button type="button" onclick="submitData()">Submit</button>
+        </form>
+        
+        <p id="successMessage" style="display:none; color:green;">Your data has been submitted successfully!</p>
+        
+        <div id="buttons" style="display:none;">
+            <button onclick="getSubmittedData()">View All Data</button>
+            <button onclick="getTopStudents()">View Top 3 Students</button>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function submitData() {
+            const formData = {
+                name: document.getElementById('name').value,
+                batch: document.getElementById('batch').value,
+                academic: document.getElementById('academic').value
+            };
+
+            fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert("Error: " + data.error);
+                } else {
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('studentForm').reset();
+                    document.getElementById('buttons').style.display = 'block';
+                }
+            });
+        }
+
+        function getSubmittedData() {
+            fetch('/all_data')
+            .then(response => response.json())
+            .then(data => {
+                let result = "<h3>Submitted Data</h3><ul>";
+                data.students.forEach(student => {
+                    result += `<li>${student.name} (Batch: ${student.batch}) - Score: ${student.score}</li>`;
+                });
+                result += "</ul>";
+                document.getElementById('result').innerHTML = result;
+            });
+        }
+
+        function getTopStudents() {
+            fetch('/top_students')
+            .then(response => response.json())
+            .then(data => {
+                let result = "<h3>Top 3 Students</h3><ul>";
+                data.top_students.forEach(student => {
+                    result += `<li>${student.name} - Score: ${student.score} (${student.rank})</li>`;
+                });
+                result += "</ul>";
+                document.getElementById('result').innerHTML = result;
+            });
+        }
+    </script>
+</body>
+</html>
